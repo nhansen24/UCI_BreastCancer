@@ -63,7 +63,7 @@ except Exception as e:
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=13)
 ```
 ###
-### 4. PCA, TPE, and/or Regularization for Feature Selection / EDA &#9749;
+### 4. PCA, TPE, and Lasso L1 Regularization for Feature Selection / EDA &#9749;
 ```python
 # In Progress: ...
 ```
