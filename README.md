@@ -65,7 +65,13 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 ###
 ### 4. Lasso L1 Regularization VS. LDA for Feature Selection / EDA &#9749;
 ```python
-# In Progress: ...
+# Lasso outperforms LDA on feature selection as validated by SGDClassifier scores:
+# Below are averaged results from fitting SGDClassifier 50 times 
+# with the cooresponding feature sets.
+
+#                       Score       Std Dev
+# Lasso feature set:    0.9846      0.0065
+# LDA feature set:      0.9654      0.0094
 ```
 ###
 ### 5. Define Pipeline and search_space for model selection in the next goal
