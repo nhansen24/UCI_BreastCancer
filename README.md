@@ -1,8 +1,30 @@
-# <div style="color:rgb(200,180,180)"> ***UCI Wisconsin Breast Cancer (Diagnostic) Dataset*** </div>
 
-## <div style="margin-left:40px;color:rgb(130,170,170);font-size:48px"> &#9733;  ML Pipelines Project  &#9733;
 
-### <div style="margin-left:170px;color:rgb(200,200,90);font-size:36px"> &#8675; Project Goals: &#8675;</div>
+# <div align="center" style="color:rgb(200,180,180)"> ***UCI Wisconsin Breast Cancer (Diagnostic) Dataset*** </div>
+###
+## <div align="center" style="color:rgb(130,170,170);font-size:48px"> &#9733;  ML Pipelines Project  &#9733;
+
+###
+### <div align="center" style="color:rgb(200,200,90);font-size:36px"> &#8675; Project Introduction: &#8675;</div>
+
+- The Breast Cancer (Diagnostic) Dataset can be found on the [UCI ML Repository](https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic)
+- Project focus is the implementation of ML Pipelines for binary classification, to include: 
+  - Data preprocessing and transformations (i.e., scale, impute, convert)
+  - Feature selection and validation (i.e., Lasso Regularization or LDA)
+  - Optimization of model parameters (search_space)
+  - Comparing resultant models of GridSearchCV and RandomizedSearchCV
+  - Developing a scalable and maintainable ML Pipeline for binary classification
+  - Validating the model with "unseen" testing data
+
+###
+### <div align="center" style="color:rgb(200,200,90);font-size:36px"> &#8675; Project Notes: &#8675;</div>
+- Scikit-learn version 1.5.2 – to minimize FutureWarning errors when fitting. 
+- When testing models independent of the Pipeline, ensure the data is first scaled!
+- Drink more coffee &#9749; &#9749; &#9749;
+
+###
+### <div align="center" style="color:rgb(200,200,90);font-size:36px"> &#8675; Project Overview: &#8675;</div>
+
 
 ### 1. Import dataset and write to local csv:  &#9921; &#9985; &#9998;
 ```python
@@ -191,13 +213,7 @@ print(rs.best_score_)
 ```
 #
 #
-### <div style="margin-left:170px;color:rgb(200,200,90);font-size:36px"> &#8675; Project Notes: &#8675;</div>
-###
-### 1) Recommend Scikit-learn version 1.5.2 to avoid FutureWarning errors when fitting.
-### 2) When testing models independent of the Pipeline, ensure you scale the data first.
-### 3) Drink more coffee
 
-### <div style="font-size:86px;margin-left:40px"> &#9749; </div>
 <!--
 Please don't delete
 &#9733; &#9968; &#9749; &#10004; &#10008; &#9921; &#9985; &#9998;
