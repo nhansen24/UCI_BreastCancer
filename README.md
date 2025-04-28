@@ -17,11 +17,13 @@
   - Validating the model with "unseen" testing data
 
 ###
+###
 ### <div align="center" style="color:rgb(200,200,90);font-size:36px"> &#8675; Project Notes: &#8675;</div>
 - Scikit-learn version 1.5.2 – to minimize FutureWarning errors when fitting. 
 - When testing models independent of the Pipeline, ensure the data is first scaled!
 - Drink more coffee &#9749; &#9749; &#9749;
 
+###
 ###
 ### <div align="center" style="color:rgb(200,200,90);font-size:36px"> &#8675; Project Overview: &#8675;</div>
 
@@ -69,17 +71,25 @@ print(df.shape)
 ```python
 # Define features and target
 y = df.Diagnosis
-X = df.drop(columns=['Diagnosis'])
+X = df.drop(columns=['Diagnosis','ID'])
+
+# Verify expected shapes before and after:
+print('X shape: ',X.shape)
+print('y shape: ',y.shape)
 
 # Convert target data to binary and verify value_counts.
-print('\nPrior to binary conversion: \n',y.value_counts())
+print('\nTarget prior to binary conversion: \n',y.value_counts())
 try:
     y = pd.DataFrame(np.where(y == 'M',1,0), columns=['Diagnosis'])
     y = y.Diagnosis
-    print('\nPost binary conversion: \n',y.value_counts(),'\n')
+    print('\nTarget post binary conversion: \n',y.value_counts(),'\n')
 
 except Exception as e:
     print(e)
+
+# Verify expected shapes before and after:
+print('X shape: ',X.shape)
+print('y shape: ',y.shape)
 
 # train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=13)
@@ -88,13 +98,21 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 ### 4. Lasso L1 Regularization VS. LDA for Feature Selection / EDA &#9749;
 ```python
 # Lasso outperforms LDA on feature selection as validated by SGDClassifier scores:
-# Below are averaged results from fitting SGDClassifier 50 times 
-# with the cooresponding feature sets.
+# Below are averaged results from fitting SGDClassifier 50 times using unique random_states
+# and with the respective feature sets.
 
-#                       Score       Std Dev
-# Lasso feature set:    0.9846      0.0065
-# LDA feature set:      0.9654      0.0094
+#                       Score       Std Dev     Features
+# Lasso feature set:    0.9846      0.0065      19
+# Full features set:	0.9814      0.0060      30
+# LDA feature set:      0.9654      0.0094      19
+
+# Both Lasso and LDA have 19 features after selection; however, Lasso features 
+# outperform even the full data set (30 features), likely due to a reduction 
+# in noisy data (i.e., noise from unimportant / low-importance features).
 ```
+*For more on Lasso L1 Regularization see notebook blocks 4.1.X* <br>
+*For more on LinearDiscriminantAnalysis see notebook blocks 4.2.X*
+
 ###
 ### 5. Define Pipeline and search_space for model selection in the next goal
 ```python
@@ -190,13 +208,13 @@ print(cv_df_results)
 from sklearn.metrics import accuracy_score
 
 # Compare the GridSearchCV best_score_ (training data)
-# to the best model's accuracy_score (testing data):
+# to the best model's accuracy_score on testing data:
 y_pred_gs = gs_best.predict(X_test)
 print(accuracy_score(y_test, y_pred))
 print(gs.best_score_)
 
 # Compare the RandomizedSearchCV best_score_ (training data) 
-# to the best model's accuracy_score (testing data):
+# to the best model's accuracy_score on testing data:
 y_pred_rs = rs_best.predict(X_test)
 print(accuracy_score(y_test, y_pred_rs))
 print(rs.best_score_)
@@ -204,6 +222,9 @@ print(rs.best_score_)
 ###
 ### 7. Hyperparameter Tuning and Model Retests
 ```python
+# 7.1 Deep Dive into RandomForestClassifier Validation
+# 7.2 Deep Dive into SGDClassifier Validation
+# 7.3 RandomizedSearchCV Implementation / Runtime Benefits
 # In Progress ...
 ```
 ###
