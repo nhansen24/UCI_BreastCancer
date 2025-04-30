@@ -19,6 +19,7 @@
 ###
 ###
 ### <div align="center" style="color:rgb(200,200,90);font-size:36px"> &#8675; Project Notes: &#8675;</div>
+- Python 3.10 or newer (specifically for SMOTE)
 - Scikit-learn version 1.5.2 – to minimize FutureWarning errors when fitting. 
 - When testing models independent of the Pipeline, ensure the data is first scaled!
 - Drink more coffee &#9749; &#9749; &#9749;
