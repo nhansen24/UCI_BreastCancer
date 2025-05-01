@@ -19,9 +19,18 @@
 ###
 ###
 ### <div align="center" style="color:rgb(200,200,90);font-size:36px"> &#8675; Project Notes: &#8675;</div>
-- Python 3.10 or newer (specifically for SMOTE)
+- Python 3.10 or newer (specifically for [SMOTE](https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.SMOTE.html))
 - Scikit-learn version 1.5.2 – to minimize FutureWarning errors when fitting. 
 - When testing models independent of the Pipeline, ensure the data is first scaled!
+- Links to source documentation:
+  - For more on [Lasso](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html)
+  - For more on [LinearDiscriminantAnalysis](https://scikit-learn.org/stable/modules/generated/sklearn.discriminant_analysis.LinearDiscriminantAnalysis.html)
+  - For more on [RandomForestClassifier](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html)
+  - For more on [SGDClassifier](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDClassifier.html)
+  - For more on [Pipeline](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html)
+  - For more on [SMOTE](https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.SMOTE.html)
+  - For more on [GridSearchCV](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html)
+  - For more on [RandomizedSearchCV](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html)
 - Drink more coffee &#9749; &#9749; &#9749;
 
 ###
@@ -103,9 +112,9 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 # and with the respective feature sets.
 
 #                       Score       Std Dev     Features
-# Lasso feature set:    0.9846      0.0065      19
-# Full features set:	0.9814      0.0060      30
-# LDA feature set:      0.9654      0.0094      19
+# Lasso feature set:    0.9909      0.0017      19
+# Full features set:	0.9889      0.0053      30
+# LDA feature set:      0.9691      0.0054      19
 
 # Both Lasso and LDA have 19 features after selection; however, Lasso features 
 # outperform even the full data set (30 features), likely due to a reduction 
@@ -226,7 +235,42 @@ print(rs.best_score_)
 # 7.1 Deep Dive into RandomForestClassifier Validation
 # 7.2 Deep Dive into SGDClassifier Validation
 # 7.3 RandomizedSearchCV Implementation / Runtime Benefits
+# 7.4 Retesting with SMOTE - Synthetic Minority Oversampling Technique
 # In Progress ...
+```
+###
+### 7.1. Deep Dive into RandomForestClassifier Validation
+*Takeaways:*
+- RandomForestClassifier (RFC) is consistently underperforming (test scores: 92% full features, 97% Lasso features)
+- RFC is significantly more expensive for run-time, averaging > 100 ms per fit compared to the 1 ms of SGDClassifier
+###
+### 7.2. Deep Dive into SGDClassifier Validation
+*Takeaways:*
+- SGDClassifier (SGDC) is a highly performant model (test scores: 98.9% full features, 99.1% Lasso features)
+- SGDC performs well with the 'log_loss' and 'hinge' *loss* parameter, but 'log_loss' outperforms overall
+- SGDC brings significant run-time benefits, averaging < 1 ms per fit and score.
+- See block 7.4 for SGDC performance with SMOTE dataset balancing.
+###
+### 7.3. RandomizedSearchCV Implementation
+*Takeaways:*
+- RandomizedSearchCV has improved control of run-times due to the n_iter parameter which defaults to 10.
+- Runs the risk of not finding the "best" parameters due to n_iter relative to search_space. 
+- Ideal for quickly finding "good" parameters.
+###
+### 7.4. Retesting with SMOTE
+*Takeaways:*
+- SMOTE performs better on the Lasso feature set (19 features selected in blocks 4.1.X)
+- SMOTE underperforms on the full feature set (30 features), likely due to an increase in sample noise
+- BEST MODEL Accuracy is approaching 99.12% for the test set and 98% for the training set
+```python
+# Balances dataset with SMOTE by synthetic insertion of positive diagnosis samples
+# into the training data set. Then scale and validate with SGDClassifier performance.
+from imblearn.over_sampling import SMOTE
+
+smote = SMOTE(random_state=13,sampling_strategy=0.99,k_neighbors=5)
+X_res, y_res = smote.fit_resample(X_train,y_train)
+
+# Note: Sampling_strategy only works when solving binary classification problems.
 ```
 ###
 ### 8. Scale and implement Pipeline as a flexible/alterable model that can adapt  &#9749;
