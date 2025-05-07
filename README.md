@@ -231,13 +231,11 @@ print(rs.best_score_)
 ```
 ###
 ### 7. Hyperparameter Tuning and Model Retests
-```python
-# 7.1 Deep Dive into RandomForestClassifier Validation
-# 7.2 Deep Dive into SGDClassifier Validation
-# 7.3 RandomizedSearchCV Implementation / Runtime Benefits
-# 7.4 Retesting with SMOTE - Synthetic Minority Oversampling Technique
-# In Progress ...
-```
+*Takeaways*
+- SGDC outperforms RandomForestClassifier in both accuracy and runtime.
+- SGDC performs best with loss='log_loss' and alpha=0.01
+- RandomizedSearchCV is a non-exhaustive solution to finding good parameters in a defined number of iterations.
+- SMOTE (Synthetic Minority Oversampling Technique) brings some moderate benefits to the SGDClassifier performance.
 ###
 ### 7.1. Deep Dive into RandomForestClassifier Validation
 *Takeaways:*
@@ -257,7 +255,7 @@ print(rs.best_score_)
 - Runs the risk of not finding the "best" parameters due to n_iter relative to search_space. 
 - Ideal for quickly finding "good" parameters.
 ###
-### 7.4. Retesting with SMOTE
+### 7.4. Retesting with SMOTE - Synthetic Minority Oversampling Technique
 *Takeaways:*
 - SMOTE performs better on the Lasso feature set (19 features selected in blocks 4.1.X)
 - SMOTE underperforms on the full feature set (30 features), likely due to an increase in sample noise
@@ -273,9 +271,18 @@ X_res, y_res = smote.fit_resample(X_train,y_train)
 # Note: Sampling_strategy only works when solving binary classification problems.
 ```
 ###
-### 8. Scale and implement Pipeline as a flexible/alterable model that can adapt  &#9749;
+### 8. FINAL Pipeline - Implementing LASSO / SMOTE / SGDClassifier  &#9749;
+*Takeaways*
+- To use Sklearn.Pipeline, helper classes must be defined for Lasso and SMOTE (add transform method)
+- Defining a get_shape() method aids in visualizing the transformation of data in the Pipeline.
+- The Pipeline is highly performant and does not appear to suffer from overfitting.
 ```python
-# In Progress: ...
+# Pipeline Steps: 
+# Preprocessor (Scale/Impute) --> LASSO Features Selection --> SMOTE --> SGDClassifier
+
+# Pipeline Testing Set Score:  0.9912
+# Pipeline Training Set Score: 0.9824
+# Pipeline CV Training Score:  0.9714
 ```
 #
 #
