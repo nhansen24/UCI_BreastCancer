@@ -35,6 +35,33 @@
 
 ###
 ###
+### <div align="center" style="color:rgb(200,200,90);font-size:36px"> &#8675; Summary of Findings: &#8675;</div>
+
+1. The highest performing model uses the following data preprocessing and classification steps:
+   - StandardScaler - Scale incoming data
+   - Lasso L1 Regularization - Feature selection
+   - SMOTE – Artificially add malignant samples - Balancing dataset
+   - SGDClassifier – Final binary classification of samples as benign or malignant
+<br><br>
+2. The model does not underfit and has little to no overfitting based upon the performance (Block 8.X):
+   - Pipeline Testing Set Score : 0.9912
+   - Pipeline Training Set Score: 0.9824
+   - Pipeline CV Training Score : 0.9714
+     - The CV score predicts expected performance on unseen data, and the Testing set is *unseen* data, the model generalizes well and performs above the 'predicted' CV score.
+<br><br>
+3. Lasso L1 Regularization (Feature Selection) has the highest ROI on model performance (Block 4.1.5):
+   - Using 19 of the 30 features performs best by removing noisy or unimportant features from the sample.
+   - Note: The model using 5 features performs as well as the model using 24 features!
+     - This illustrates the importance of removing sample noise.
+<br><br>
+4. SGDClassifier brings significant performance and runtime benefits (Block 7.2):
+   - Fit and score time are reduced by **two orders of magnitude** over RandomForestClassifier and GradientBoosting.
+   - Optimal SGDC parameters include: 
+     - loss = 'log_loss'
+     - alpha = 0.01
+
+###
+###
 ### <div align="center" style="color:rgb(200,200,90);font-size:36px"> &#8675; Project Overview: &#8675;</div>
 
 
@@ -108,8 +135,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 ### 4. Lasso L1 Regularization VS. LDA for Feature Selection / EDA &#9749;
 ```python
 # Lasso outperforms LDA on feature selection as validated by SGDClassifier scores:
-# Below are averaged results from fitting SGDClassifier 50 times using unique random_states
-# and with the respective feature sets.
+# Below are averaged results from fitting SGDClassifier 50 times using unique 
+# random_states and with the respective feature sets.
 
 #                       Score       Std Dev     Features
 # Lasso feature set:    0.9909      0.0017      19
@@ -124,7 +151,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 *For more on LinearDiscriminantAnalysis see notebook blocks 4.2.X*
 
 ###
-### 5. Define Pipeline and search_space for model selection in the next goal
+### 5. Define a Pipeline and search_space for model selection
 ```python
 # Define Preprocessor, Pipeline, and search_space for GridSearchCV()
 scaler = StandardScaler()
@@ -238,25 +265,25 @@ print(rs.best_score_)
 - SMOTE (Synthetic Minority Oversampling Technique) brings some moderate benefits to the SGDClassifier performance.
 ###
 ### 7.1. Deep Dive into RandomForestClassifier Validation
-*Takeaways:*
+
 - RandomForestClassifier (RFC) is consistently underperforming (test scores: 92% full features, 97% Lasso features)
 - RFC is significantly more expensive for run-time, averaging > 100 ms per fit compared to the 1 ms of SGDClassifier
 ###
 ### 7.2. Deep Dive into SGDClassifier Validation
-*Takeaways:*
+
 - SGDClassifier (SGDC) is a highly performant model (test scores: 98.9% full features, 99.1% Lasso features)
 - SGDC performs well with the 'log_loss' and 'hinge' *loss* parameter, but 'log_loss' outperforms overall
 - SGDC brings significant run-time benefits, averaging < 1 ms per fit and score.
 - See block 7.4 for SGDC performance with SMOTE dataset balancing.
 ###
 ### 7.3. RandomizedSearchCV Implementation
-*Takeaways:*
+
 - RandomizedSearchCV has improved control of run-times due to the n_iter parameter which defaults to 10.
 - Runs the risk of not finding the "best" parameters due to n_iter relative to search_space. 
 - Ideal for quickly finding "good" parameters.
 ###
-### 7.4. Retesting with SMOTE - Synthetic Minority Oversampling Technique
-*Takeaways:*
+### 7.4. Retesting with SMOTE – Synthetic Minority Oversampling Technique
+
 - SMOTE performs better on the Lasso feature set (19 features selected in blocks 4.1.X)
 - SMOTE underperforms on the full feature set (30 features), likely due to an increase in sample noise
 - BEST MODEL Accuracy is approaching 99.12% for the test set and 98% for the training set
@@ -274,18 +301,19 @@ X_res, y_res = smote.fit_resample(X_train,y_train)
 ### 8. FINAL Pipeline - Implementing LASSO / SMOTE / SGDClassifier  &#9749;
 *Takeaways*
 - To use Sklearn.Pipeline, helper classes must be defined for Lasso and SMOTE (add transform method)
-- Defining a get_shape() method aids in visualizing the transformation of data in the Pipeline.
+  - Note: another solution is to use Imblearn.Pipeline
+- Defining get_shape() method aids in visualizing the transformation of data in the Pipeline.
 - The Pipeline is highly performant and does not appear to suffer from overfitting.
 ```python
 # Pipeline Steps: 
-# Preprocessor (Scale/Impute) --> LASSO Features Selection --> SMOTE --> SGDClassifier
+# Preprocessor (Scale) --> LASSO Features Selection --> SMOTE --> SGDClassifier
 
 # Pipeline Testing Set Score:  0.9912
 # Pipeline Training Set Score: 0.9824
 # Pipeline CV Training Score:  0.9714
 ```
-#
-#
+###
+###
 
 <!--
 Please don't delete
