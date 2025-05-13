@@ -303,14 +303,15 @@ X_res, y_res = smote.fit_resample(X_train,y_train)
 - To use Sklearn.Pipeline, helper classes must be defined for Lasso and SMOTE (add transform method)
   - Note: another solution is to use Imblearn.Pipeline
 - Defining get_shape() method aids in visualizing the transformation of data in the Pipeline.
-- The Pipeline is highly performant and does not appear to suffer from overfitting.
+- The Pipeline is highly performant and does not appear to suffer much from overfitting.
 ```python
 # Pipeline Steps: 
 # Preprocessor (Scale) --> LASSO Features Selection --> SMOTE --> SGDClassifier
 
-# Pipeline Testing Set Score:  0.9912
-# Pipeline Training Set Score: 0.9824
-# Pipeline CV Training Score:  0.9714
+# Average Scores from 100 unique train_test_splits (BLOCK 8.5):
+# Pipeline Testing Set Score:  0.9732  std dev: 0.0138
+# Pipeline Training Set Score: 0.9834  std dev: 0.0045
+# Pipeline CV Training Score:  0.9757
 ```
 ###
 ###
